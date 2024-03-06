@@ -298,6 +298,12 @@ public class MultiJobBuilder extends Builder implements DependecyDeclarer {
             PhaseSubJob phaseSubJob = entry.getKey();
             Job subJob = phaseSubJob.job;
 
+            if(! subJob.isBuildable()){
+                listener.getLogger().println(String.format("Skipping %s. The job is not buildable.", subJob.getDisplayName()));
+                phaseCounters.processSkipped();
+                continue;
+            }
+
             // To be coherent with final results, we need to do this here.
             PhaseJobsConfig phaseConfig = entry.getValue();
             StatusJob jobStatus = getScmChange(subJob,phaseConfig,multiJobBuild ,listener,launcher );
